@@ -73,12 +73,56 @@ export const GoCodeExplorer: React.FC<GoCodeExplorerProps> = ({ onDownloadZip })
           </div>
         </div>
 
+        {/* Quick Shell & 1-Line Installer Banner */}
+        <div className="p-4 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 rounded-xl border border-indigo-500/30 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-bold text-indigo-300 uppercase tracking-wide">
+                Быстрая установка одной командой (All-in-One Installer)
+              </span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-sans">
+              Автоматически установит Go 1.22 (при отсутствии), скомпилирует 4 бинарника и запустит тесты
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-xs text-slate-200">
+            <Terminal className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="select-all flex-1 overflow-x-auto whitespace-nowrap text-emerald-300">
+              curl -sSL {typeof window !== 'undefined' ? `${window.location.origin}/install.sh` : 'https://ais-dev-3r7sdedp5xqj4ximxfd74e-830744426087.europe-west2.run.app/install.sh'} | bash
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                const url = typeof window !== 'undefined' ? `${window.location.origin}/install.sh` : 'https://ais-dev-3r7sdedp5xqj4ximxfd74e-830744426087.europe-west2.run.app/install.sh';
+                navigator.clipboard.writeText(`curl -sSL ${url} | bash`);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="cursor-pointer px-2.5 py-1 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded transition-colors shrink-0 flex items-center gap-1 font-sans"
+            >
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Скопировано!' : 'Копировать'}</span>
+            </button>
+            <a
+              href="/install.sh"
+              download="install.sh"
+              className="cursor-pointer px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded transition-colors shrink-0 flex items-center gap-1 font-sans"
+              title="Скачать скрипт install.sh"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Скачать .sh</span>
+            </a>
+          </div>
+        </div>
+
         {/* Quick Shell Guide */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
           <div className="p-3 bg-slate-950/70 rounded-lg border border-slate-800">
             <div className="text-slate-500 text-[11px] mb-1 font-sans flex items-center gap-1.5">
               <Terminal className="w-3 h-3 text-emerald-400" />
-              <span>Run Automated Unit Tests</span>
+              <span>Запуск тестов протокола</span>
             </div>
             <code className="text-emerald-300 text-xs">go test -v ./pkg/protocol/...</code>
           </div>
@@ -86,7 +130,7 @@ export const GoCodeExplorer: React.FC<GoCodeExplorerProps> = ({ onDownloadZip })
           <div className="p-3 bg-slate-950/70 rounded-lg border border-slate-800">
             <div className="text-slate-500 text-[11px] mb-1 font-sans flex items-center gap-1.5">
               <Terminal className="w-3 h-3 text-indigo-400" />
-              <span>Start Server with 6s Anti-DoS</span>
+              <span>Сервер с Anti-DoS таймером</span>
             </div>
             <code className="text-indigo-300 text-xs">go run ./cmd/server/main.go</code>
           </div>
@@ -94,7 +138,7 @@ export const GoCodeExplorer: React.FC<GoCodeExplorerProps> = ({ onDownloadZip })
           <div className="p-3 bg-slate-950/70 rounded-lg border border-slate-800">
             <div className="text-slate-500 text-[11px] mb-1 font-sans flex items-center gap-1.5">
               <Terminal className="w-3 h-3 text-amber-400" />
-              <span>Launch Client with Jitter & Loss</span>
+              <span>Клиент с джиттером и потерями</span>
             </div>
             <code className="text-amber-300 text-xs">go run ./cmd/client/main.go -loss 10</code>
           </div>
